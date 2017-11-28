@@ -1,0 +1,14 @@
+{
+  "name": "filepond-plugin-file-validate-size",
+  "version": "1.0.0",
+  "description": "File Size Validation Plugin for FilePond",
+  "homepage": "https://pqina.nl/filepond",
+  "main": "filepond-plugin-file-validate-size.js",
+  "browser": "filepond-plugin-file-validate-size.js",
+  "module": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "PQINA",
+    "url": "https://pqina.nl"
+  }
+}

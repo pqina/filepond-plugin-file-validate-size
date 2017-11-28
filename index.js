@@ -1,0 +1,6 @@
+/*
+ * FilePondPluginFileValidateSize 1.0.0
+ * Licensed under MIT, https://opensource.org/licenses/MIT
+ * Please visit https://pqina.nl/filepond for details.
+ */
+var plugin$1=({addFilter:e,utils:i})=>{const{Type:l,replaceInString:E,toNaturalFileSize:a}=i;e("SET_DEFAULT_OPTIONS",e=>Object.assign(e,{allowFileSizeValidation:[!0,l.BOOLEAN],maxFileSize:[null,l.INT],maxTotalFileSize:[null,l.INT],labelMaxFileSizeExceeded:["File is too large",l.STRING],labelMaxFileSize:["Maximum file size is {filesize}",l.STRING],labelMaxTotalFileSizeExceeded:["Maximum total size exceeded",l.STRING],labelMaxTotalFileSize:["Maximum total file size is {filesize}",l.STRING]})),e("LOAD_FILE",(e,{query:i})=>new Promise((l,_)=>{if(!i("GET_ALLOW_FILE_SIZE_VALIDATION"))return void l(e);const t=i("GET_MAX_FILE_SIZE");if(null!==t&&e.size>t)return void _({status:{main:i("GET_LABEL_MAX_FILE_SIZE_EXCEEDED"),sub:E(i("GET_LABEL_MAX_FILE_SIZE"),{filesize:a(t)})}});const T=i("GET_MAX_TOTAL_FILE_SIZE");if(null!==T){if(i("GET_ITEMS").reduce((e,i)=>e+i.fileSize,0)+e.size>T)return void _({status:{main:i("GET_LABEL_MAX_TOTAL_FILE_SIZE_EXCEEDED"),sub:E(i("GET_LABEL_MAX_TOTAL_FILE_SIZE"),{filesize:a(T)})}})}l(e)}))};document&&document.dispatchEvent(new CustomEvent("FilePond:pluginloaded",{detail:plugin$1}));export default plugin$1;
