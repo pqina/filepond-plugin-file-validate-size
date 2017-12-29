@@ -1,5 +1,5 @@
 /*
- * FilePondPluginFileValidateSize 1.0.0
+ * FilePondPluginFileValidateSize 1.0.1
  * Licensed under MIT, https://opensource.org/licenses/MIT
  * Please visit https://pqina.nl/filepond for details.
  */
@@ -21,36 +21,10 @@
       replaceInString = utils.replaceInString,
       toNaturalFileSize = utils.toNaturalFileSize;
 
-    // adds options to options register
-
-    addFilter('SET_DEFAULT_OPTIONS', function(options) {
-      return Object.assign(options, {
-        // Enable or disable file type validation
-        allowFileSizeValidation: [true, Type.BOOLEAN],
-
-        // Max individual file size in bytes
-        maxFileSize: [null, Type.INT],
-
-        // Max total file size in bytes
-        maxTotalFileSize: [null, Type.INT],
-
-        // error labels
-        labelMaxFileSizeExceeded: ['File is too large', Type.STRING],
-        labelMaxFileSize: ['Maximum file size is {filesize}', Type.STRING],
-        labelMaxTotalFileSizeExceeded: [
-          'Maximum total size exceeded',
-          Type.STRING
-        ],
-        labelMaxTotalFileSize: [
-          'Maximum total file size is {filesize}',
-          Type.STRING
-        ]
-      });
-    });
-
     // called for each file that is loaded
     // right before it is set to the item state
     // should return a promise
+
     addFilter('LOAD_FILE', function(file, _ref2) {
       var query = _ref2.query;
       return new Promise(function(resolve, reject) {
@@ -105,6 +79,31 @@
         resolve(file);
       });
     });
+
+    return {
+      options: {
+        // Enable or disable file type validation
+        allowFileSizeValidation: [true, Type.BOOLEAN],
+
+        // Max individual file size in bytes
+        maxFileSize: [null, Type.INT],
+
+        // Max total file size in bytes
+        maxTotalFileSize: [null, Type.INT],
+
+        // error labels
+        labelMaxFileSizeExceeded: ['File is too large', Type.STRING],
+        labelMaxFileSize: ['Maximum file size is {filesize}', Type.STRING],
+        labelMaxTotalFileSizeExceeded: [
+          'Maximum total size exceeded',
+          Type.STRING
+        ],
+        labelMaxTotalFileSize: [
+          'Maximum total file size is {filesize}',
+          Type.STRING
+        ]
+      }
+    };
   };
 
   if (document) {
