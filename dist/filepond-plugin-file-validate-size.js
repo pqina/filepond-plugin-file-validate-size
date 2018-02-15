@@ -1,5 +1,5 @@
 /*
- * FilePondPluginFileValidateSize 1.0.1
+ * FilePondPluginFileValidateSize 1.0.2
  * Licensed under MIT, https://opensource.org/licenses/MIT
  * Please visit https://pqina.nl/filepond for details.
  */
@@ -21,16 +21,30 @@
       replaceInString = utils.replaceInString,
       toNaturalFileSize = utils.toNaturalFileSize;
 
+    // filtering if an item is allowed in hopper
+
+    addFilter('ALLOW_HOPPER_ITEM', function(file, _ref2) {
+      var query = _ref2.query;
+
+      if (!query('GET_ALLOW_FILE_SIZE_VALIDATION')) {
+        return true;
+      }
+
+      var sizeMax = query('GET_MAX_FILE_SIZE');
+      if (sizeMax !== null && file.size > sizeMax) {
+        return false;
+      }
+      return true;
+    });
+
     // called for each file that is loaded
     // right before it is set to the item state
     // should return a promise
-
-    addFilter('LOAD_FILE', function(file, _ref2) {
-      var query = _ref2.query;
+    addFilter('LOAD_FILE', function(file, _ref3) {
+      var query = _ref3.query;
       return new Promise(function(resolve, reject) {
         // if not allowed, all fine, exit
-        var allowFileSizeValidation = query('GET_ALLOW_FILE_SIZE_VALIDATION');
-        if (!allowFileSizeValidation) {
+        if (!query('GET_ALLOW_FILE_SIZE_VALIDATION')) {
           resolve(file);
           return;
         }
