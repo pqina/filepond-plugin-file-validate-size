@@ -1,5 +1,5 @@
 /*
- * FilePondPluginFileValidateSize 1.0.2
+ * FilePondPluginFileValidateSize 1.0.3
  * Licensed under MIT, https://opensource.org/licenses/MIT
  * Please visit https://pqina.nl/filepond for details.
  */
@@ -100,7 +100,7 @@ var plugin$1 = ({ addFilter, utils }) => {
   };
 };
 
-if (document) {
+if (typeof navigator !== 'undefined' && document) {
   // plugin has loaded
   document.dispatchEvent(
     new CustomEvent('FilePond:pluginloaded', { detail: plugin$1 })
