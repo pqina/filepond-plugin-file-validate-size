@@ -1,5 +1,5 @@
 /*
- * FilePondPluginFileValidateSize 1.0.3
+ * FilePondPluginFileValidateSize 1.0.4
  * Licensed under MIT, https://opensource.org/licenses/MIT
  * Please visit https://pqina.nl/filepond for details.
  */
@@ -76,7 +76,7 @@
           0);
 
           // get the size of the new file
-          if (currentTotalSize + file.size > totalSizeMax) {
+          if (currentTotalSize > totalSizeMax) {
             reject({
               status: {
                 main: query('GET_LABEL_MAX_TOTAL_FILE_SIZE_EXCEEDED'),
