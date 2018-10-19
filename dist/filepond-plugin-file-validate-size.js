@@ -1,5 +1,5 @@
 /*
- * FilePondPluginFileValidateSize 1.0.4
+ * FilePondPluginFileValidateSize 2.0.0
  * Licensed under MIT, https://opensource.org/licenses/MIT
  * Please visit https://pqina.nl/filepond for details.
  */
@@ -67,7 +67,7 @@
         var totalSizeMax = query('GET_MAX_TOTAL_FILE_SIZE');
         if (totalSizeMax !== null) {
           // get the current total file size
-          var currentTotalSize = query('GET_ITEMS').reduce(function(
+          var currentTotalSize = query('GET_ACTIVE_ITEMS').reduce(function(
             total,
             item
           ) {
@@ -120,8 +120,10 @@
     };
   };
 
-  if (typeof navigator !== 'undefined' && document) {
-    // plugin has loaded
+  var isBrowser =
+    typeof window !== 'undefined' && typeof window.document !== 'undefined';
+
+  if (isBrowser && document) {
     document.dispatchEvent(
       new CustomEvent('FilePond:pluginloaded', { detail: plugin$1 })
     );
