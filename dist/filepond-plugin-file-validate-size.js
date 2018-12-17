@@ -1,8 +1,10 @@
 /*
- * FilePondPluginFileValidateSize 2.0.0
+ * FilePondPluginFileValidateSize 2.1.0
  * Licensed under MIT, https://opensource.org/licenses/MIT
  * Please visit https://pqina.nl/filepond for details.
  */
+
+/* eslint-disable */
 (function(global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined'
     ? (module.exports = factory())
@@ -31,9 +33,15 @@
       }
 
       var sizeMax = query('GET_MAX_FILE_SIZE');
-      if (sizeMax !== null && file.size > sizeMax) {
+      if (sizeMax !== null && file.size >= sizeMax) {
         return false;
       }
+
+      var sizeMin = query('GET_MIN_FILE_SIZE');
+      if (sizeMin !== null && file.size <= sizeMin) {
+        return false;
+      }
+
       return true;
     });
 
@@ -51,12 +59,26 @@
 
         // reject or resolve based on file size
         var sizeMax = query('GET_MAX_FILE_SIZE');
-        if (sizeMax !== null && file.size > sizeMax) {
+        if (sizeMax !== null && file.size >= sizeMax) {
           reject({
             status: {
               main: query('GET_LABEL_MAX_FILE_SIZE_EXCEEDED'),
               sub: replaceInString(query('GET_LABEL_MAX_FILE_SIZE'), {
                 filesize: toNaturalFileSize(sizeMax)
+              })
+            }
+          });
+          return;
+        }
+
+        // reject or resolve based on file size
+        var sizeMin = query('GET_MIN_FILE_SIZE');
+        if (sizeMin !== null && file.size <= sizeMin) {
+          reject({
+            status: {
+              main: query('GET_LABEL_MIN_FILE_SIZE_EXCEEDED'),
+              sub: replaceInString(query('GET_LABEL_MIN_FILE_SIZE'), {
+                filesize: toNaturalFileSize(sizeMin)
               })
             }
           });
@@ -102,12 +124,19 @@
         // Max individual file size in bytes
         maxFileSize: [null, Type.INT],
 
+        // Min individual file size in bytes
+        minFileSize: [null, Type.INT],
+
         // Max total file size in bytes
         maxTotalFileSize: [null, Type.INT],
 
         // error labels
+        labelMinFileSizeExceeded: ['File is too small', Type.STRING],
+        labelMinFileSize: ['Minimum file size is {filesize}', Type.STRING],
+
         labelMaxFileSizeExceeded: ['File is too large', Type.STRING],
         labelMaxFileSize: ['Maximum file size is {filesize}', Type.STRING],
+
         labelMaxTotalFileSizeExceeded: [
           'Maximum total size exceeded',
           Type.STRING

@@ -1,6 +1,6 @@
 {
     "name": "filepond-plugin-file-validate-size",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "File Size Validation Plugin for FilePond",
     "homepage": "https://pqina.nl/filepond",
     "repository": "pqina/filepond-plugin-file-validate-size",
