@@ -1,6 +1,6 @@
 {
     "name": "filepond-plugin-file-validate-size",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "File Size Validation Plugin for FilePond",
     "homepage": "https://pqina.nl/filepond",
     "repository": "pqina/filepond-plugin-file-validate-size",
@@ -8,11 +8,11 @@
     "browser": "dist/filepond-plugin-file-validate-size.js",
     "module": "dist/filepond-plugin-file-validate-size.esm.js",
     "license": "MIT",
-    "peerDependencies": {
-        "filepond": "^3.1.2"
-    },
     "author": {
         "name": "PQINA",
         "url": "https://pqina.nl"
+    },
+    "peerDependencies": {
+        "filepond": ">=3.1.2 <5.x"
     }
 }
