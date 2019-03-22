@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilePond Plugin File Validate Size Demo</title>
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+</head>
+<body>
+
+    <input type="file"/>
+    
+    <script src="./dist/filepond-plugin-file-validate-size.js"></script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    
+    <script>
+        // Register the plugin with FilePond
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
+        // Get a reference to the file input element
+        const inputElement = document.querySelector('input[type="file"]');
+
+        // Create the FilePond instance
+        const pond = FilePond.create(inputElement, {
+            maxFileSize: '100KB'
+        });
+    </script>
+
+</body>
+</html>
