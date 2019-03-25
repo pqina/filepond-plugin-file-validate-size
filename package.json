@@ -1,6 +1,6 @@
 {
     "name": "filepond-plugin-file-validate-size",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "description": "File Size Validation Plugin for FilePond",
     "license": "MIT",
     "author": {
@@ -12,6 +12,12 @@
     "main": "dist/filepond-plugin-file-validate-size.js",
     "browser": "dist/filepond-plugin-file-validate-size.js",
     "module": "dist/filepond-plugin-file-validate-size.esm.js",
+    "browserslist": [
+        "last 1 version and not Explorer 10",
+        "Explorer 11",
+        "iOS >= 9",
+        "Android >= 4.4"
+    ],
     "files": [
         "dist"
     ],
