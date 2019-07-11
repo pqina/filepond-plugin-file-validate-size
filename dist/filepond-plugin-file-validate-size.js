@@ -1,5 +1,5 @@
 /*!
- * FilePondPluginFileValidateSize 2.1.3
+ * FilePondPluginFileValidateSize 2.2.0
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -52,8 +52,13 @@
       return new Promise(function(resolve, reject) {
         // if not allowed, all fine, exit
         if (!query('GET_ALLOW_FILE_SIZE_VALIDATION')) {
-          resolve(file);
-          return;
+          return resolve(file);
+        }
+
+        // check if file should be filtered
+        var fileFilter = query('GET_FILE_VALIDATE_SIZE_FILTER');
+        if (fileFilter && !fileFilter(file)) {
+          return resolve(file);
         }
 
         // reject or resolve based on file size
@@ -132,6 +137,9 @@
 
         // Max total file size in bytes
         maxTotalFileSize: [null, Type.INT],
+
+        // Filter the files that need to be validated for size
+        fileValidateSizeFilter: [null, Type.FUNCTION],
 
         // error labels
         labelMinFileSizeExceeded: ['File is too small', Type.STRING],
