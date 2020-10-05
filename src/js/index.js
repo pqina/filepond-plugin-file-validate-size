@@ -49,7 +49,7 @@ const plugin = ({ addFilter, utils }) => {
                             sub: replaceInString(
                                 query('GET_LABEL_MAX_FILE_SIZE'),
                                 {
-                                    filesize: toNaturalFileSize(sizeMax)
+                                    filesize: toNaturalFileSize(sizeMax, '.', root.query('GET_FILE_SIZE_BASE'))
                                 }
                             )
                         }
@@ -66,7 +66,7 @@ const plugin = ({ addFilter, utils }) => {
                             sub: replaceInString(
                                 query('GET_LABEL_MIN_FILE_SIZE'),
                                 {
-                                    filesize: toNaturalFileSize(sizeMin)
+                                    filesize: toNaturalFileSize(sizeMin, '.', root.query('GET_FILE_SIZE_BASE'))
                                 }
                             )
                         }
