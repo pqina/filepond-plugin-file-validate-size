@@ -28,7 +28,6 @@ const plugin = ({ addFilter, utils }) => {
         'LOAD_FILE',
         (file, { query }) =>
             new Promise((resolve, reject) => {
-
                 // if not allowed, all fine, exit
                 if (!query('GET_ALLOW_FILE_SIZE_VALIDATION')) {
                     return resolve(file);
@@ -46,13 +45,14 @@ const plugin = ({ addFilter, utils }) => {
                     reject({
                         status: {
                             main: query('GET_LABEL_MAX_FILE_SIZE_EXCEEDED'),
-                            sub: replaceInString(
-                                query('GET_LABEL_MAX_FILE_SIZE'),
-                                {
-                                    filesize: toNaturalFileSize(sizeMax, '.', root.query('GET_FILE_SIZE_BASE'))
-                                }
-                            )
-                        }
+                            sub: replaceInString(query('GET_LABEL_MAX_FILE_SIZE'), {
+                                filesize: toNaturalFileSize(
+                                    sizeMax,
+                                    '.',
+                                    query('GET_FILE_SIZE_BASE')
+                                ),
+                            }),
+                        },
                     });
                     return;
                 }
@@ -63,13 +63,14 @@ const plugin = ({ addFilter, utils }) => {
                     reject({
                         status: {
                             main: query('GET_LABEL_MIN_FILE_SIZE_EXCEEDED'),
-                            sub: replaceInString(
-                                query('GET_LABEL_MIN_FILE_SIZE'),
-                                {
-                                    filesize: toNaturalFileSize(sizeMin, '.', root.query('GET_FILE_SIZE_BASE'))
-                                }
-                            )
-                        }
+                            sub: replaceInString(query('GET_LABEL_MIN_FILE_SIZE'), {
+                                filesize: toNaturalFileSize(
+                                    sizeMin,
+                                    '.',
+                                    query('GET_FILE_SIZE_BASE')
+                                ),
+                            }),
+                        },
                     });
                     return;
                 }
@@ -78,29 +79,19 @@ const plugin = ({ addFilter, utils }) => {
                 const totalSizeMax = query('GET_MAX_TOTAL_FILE_SIZE');
                 if (totalSizeMax !== null) {
                     // get the current total file size
-                    const currentTotalSize = query('GET_ACTIVE_ITEMS').reduce(
-                        (total, item) => {
-                            return total + item.fileSize;
-                        },
-                        0
-                    );
+                    const currentTotalSize = query('GET_ACTIVE_ITEMS').reduce((total, item) => {
+                        return total + item.fileSize;
+                    }, 0);
 
                     // get the size of the new file
                     if (currentTotalSize > totalSizeMax) {
                         reject({
                             status: {
-                                main: query(
-                                    'GET_LABEL_MAX_TOTAL_FILE_SIZE_EXCEEDED'
-                                ),
-                                sub: replaceInString(
-                                    query('GET_LABEL_MAX_TOTAL_FILE_SIZE'),
-                                    {
-                                        filesize: toNaturalFileSize(
-                                            totalSizeMax
-                                        )
-                                    }
-                                )
-                            }
+                                main: query('GET_LABEL_MAX_TOTAL_FILE_SIZE_EXCEEDED'),
+                                sub: replaceInString(query('GET_LABEL_MAX_TOTAL_FILE_SIZE'), {
+                                    filesize: toNaturalFileSize(totalSizeMax),
+                                }),
+                            },
                         });
                         return;
                     }
@@ -135,15 +126,9 @@ const plugin = ({ addFilter, utils }) => {
             labelMaxFileSizeExceeded: ['File is too large', Type.STRING],
             labelMaxFileSize: ['Maximum file size is {filesize}', Type.STRING],
 
-            labelMaxTotalFileSizeExceeded: [
-                'Maximum total size exceeded',
-                Type.STRING
-            ],
-            labelMaxTotalFileSize: [
-                'Maximum total file size is {filesize}',
-                Type.STRING
-            ]
-        }
+            labelMaxTotalFileSizeExceeded: ['Maximum total size exceeded', Type.STRING],
+            labelMaxTotalFileSize: ['Maximum total file size is {filesize}', Type.STRING],
+        },
     };
 };
 
