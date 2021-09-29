@@ -49,7 +49,8 @@ const plugin = ({ addFilter, utils }) => {
                                 filesize: toNaturalFileSize(
                                     sizeMax,
                                     '.',
-                                    query('GET_FILE_SIZE_BASE')
+                                    query('GET_FILE_SIZE_BASE'),
+                                    query('GET_FILE_SIZE_LABELS', query)
                                 ),
                             }),
                         },
@@ -67,7 +68,8 @@ const plugin = ({ addFilter, utils }) => {
                                 filesize: toNaturalFileSize(
                                     sizeMin,
                                     '.',
-                                    query('GET_FILE_SIZE_BASE')
+                                    query('GET_FILE_SIZE_BASE'),
+                                    query('GET_FILE_SIZE_LABELS', query)
                                 ),
                             }),
                         },
@@ -89,7 +91,12 @@ const plugin = ({ addFilter, utils }) => {
                             status: {
                                 main: query('GET_LABEL_MAX_TOTAL_FILE_SIZE_EXCEEDED'),
                                 sub: replaceInString(query('GET_LABEL_MAX_TOTAL_FILE_SIZE'), {
-                                    filesize: toNaturalFileSize(totalSizeMax),
+                                    filesize: toNaturalFileSize(
+                                        totalSizeMax,
+                                        '.',
+                                        query('GET_FILE_SIZE_BASE'),
+                                        query('GET_FILE_SIZE_LABELS', query)
+                                    ),
                                 }),
                             },
                         });
