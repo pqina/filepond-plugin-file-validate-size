@@ -5,6 +5,8 @@ declare module "filepond" {
   export interface FilePondOptions {
     /** Enable or disable file size validation. */
     allowFileSizeValidation?: boolean;
+    /** The minimum size of a file, for instance 5MB or 750KB. */
+    minFileSize?: string | null;
     /** The maximum size of a file, for instance 5MB or 750KB. */
     maxFileSize?: string | null;
     /** Maximum size of all files in list, same format as maxFileSize. */
