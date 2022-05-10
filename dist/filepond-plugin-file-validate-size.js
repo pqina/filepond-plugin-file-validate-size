@@ -1,5 +1,5 @@
 /*!
- * FilePondPluginFileValidateSize 2.2.6
+ * FilePondPluginFileValidateSize 2.2.7
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -31,12 +31,12 @@
             }
 
             var sizeMax = query('GET_MAX_FILE_SIZE');
-            if (sizeMax !== null && file.size >= sizeMax) {
+            if (sizeMax !== null && file.size > sizeMax) {
                 return false;
             }
 
             var sizeMin = query('GET_MIN_FILE_SIZE');
-            if (sizeMin !== null && file.size <= sizeMin) {
+            if (sizeMin !== null && file.size < sizeMin) {
                 return false;
             }
 
@@ -62,7 +62,7 @@
 
                 // reject or resolve based on file size
                 var sizeMax = query('GET_MAX_FILE_SIZE');
-                if (sizeMax !== null && file.size >= sizeMax) {
+                if (sizeMax !== null && file.size > sizeMax) {
                     reject({
                         status: {
                             main: query('GET_LABEL_MAX_FILE_SIZE_EXCEEDED'),
@@ -82,7 +82,7 @@
 
                 // reject or resolve based on file size
                 var sizeMin = query('GET_MIN_FILE_SIZE');
-                if (sizeMin !== null && file.size <= sizeMin) {
+                if (sizeMin !== null && file.size < sizeMin) {
                     reject({
                         status: {
                             main: query('GET_LABEL_MIN_FILE_SIZE_EXCEEDED'),
