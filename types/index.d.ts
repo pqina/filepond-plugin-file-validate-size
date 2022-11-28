@@ -7,6 +7,10 @@ declare module "filepond" {
     allowFileSizeValidation?: boolean;
     /** The minimum size of a file, for instance 5MB or 750KB. */
     minFileSize?: string | null;
+    /** Message shown when a small file is dropped. */
+    labelMinFileSizeExceeded?: string;
+    /** Message shown when the file size is lower than the {filesize}. {filesize} is replaced with the value of the minFileSize property */
+    labelMinFileSize?: string;
     /** The maximum size of a file, for instance 5MB or 750KB. */
     maxFileSize?: string | null;
     /** Maximum size of all files in list, same format as maxFileSize. */
