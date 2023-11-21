@@ -47,6 +47,58 @@ const plugin = ({ addFilter, utils }) => {
                     return resolve(file);
                 }
 
+                // reject or resolve base on file size by mime type
+                const mimeSizes = query('GET_MIME_FILE_SIZE');
+                if (mimeSizes !== null) {
+                    // It's unclear how the query('GET_MAX_FILE_SIZE') is converting strings
+                    // like '5mb' to ints like 5000000, so hacking behavior in here for
+                    // mime-based limits. Ideally should use the same logic the other
+                    // max file size limit uses, but api documentation is virtually
+                    // non existent. :(
+
+                    const _strToBytes = str => {
+                        const multiplier = {
+                            b: 1,
+                            kb: 1000,
+                            mb: 1000 ** 2,
+                            gb: 1000 ** 3,
+                            tb: 1000 ** 4,
+                            pb: 1000 ** 5,
+                        };
+                        const num = Number(str.match(/\d/).toString());
+                        const type = str
+                            .match(/[a-zA-Z]+/)
+                            .toString()
+                            .toLowerCase();
+                        return num * multiplier[type];
+                    };
+
+                    Object.keys(mimeSizes).forEach(mime => {
+                        if (
+                            file.type === mime ||
+                            (mime.substring(2, -2) === '/*' &&
+                                file.type.split('/')[0] === mime.slice(0, -2))
+                        ) {
+                            if (file.size > _strToBytes(mimeSizes[mime])) {
+                                reject({
+                                    status: {
+                                        main: query('GET_LABEL_MAX_FILE_SIZE_EXCEEDED'),
+                                        sub: replaceInString(query('GET_LABEL_MAX_FILE_SIZE'), {
+                                            filesize: toNaturalFileSize(
+                                                _strToBytes(mimeSizes[mime]),
+                                                '.',
+                                                query('GET_FILE_SIZE_BASE'),
+                                                query('GET_FILE_SIZE_LABELS', query)
+                                            ),
+                                        }),
+                                    },
+                                });
+                                return;
+                            }
+                        }
+                    });
+                }
+
                 // reject or resolve based on file size
                 const sizeMax = query('GET_MAX_FILE_SIZE');
                 if (sizeMax !== null && file.size > sizeMax) {
@@ -121,6 +173,9 @@ const plugin = ({ addFilter, utils }) => {
         options: {
             // Enable or disable file type validation
             allowFileSizeValidation: [true, Type.BOOLEAN],
+
+            // Max individual file size in bytes by mime type
+            mimeSizes: [null, Type.OBJECT],
 
             // Max individual file size in bytes
             maxFileSize: [null, Type.INT],
