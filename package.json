@@ -39,6 +39,6 @@
         "rollup-plugin-license": "^0.8.1",
         "rollup-plugin-node-resolve": "^4.0.1",
         "rollup-plugin-prettier": "^0.6.0",
-        "rollup-plugin-terser": "^4.0.4"
+        "rollup-plugin-terser": "^7.0.2"
     }
 }
