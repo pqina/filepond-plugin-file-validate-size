@@ -10,6 +10,32 @@ const plugin = ({ addFilter, utils }) => {
     // get quick reference to Type utils
     const { Type, replaceInString, toNaturalFileSize } = utils;
 
+    // There is some magic happening that makes it unclear how the
+    // query('GET_MAX_FILE_SIZE') is converting strings like '5mb'
+    // to ints like 5000000, so hacking that behavior in here for
+    // mime-based limits. Ideally should use the same logic the other
+    // max file size limit uses, but api documentation for plugins
+    // is sadly rather lacking. :(
+
+    const _strToBytes = str => {
+        // Multipliers should probably be 1024 vs 1000,
+        // but this mimics the internal behavior.
+        const multiplier = {
+            b: 1,
+            kb: 1000,
+            mb: 1000 ** 2,
+            gb: 1000 ** 3,
+            tb: 1000 ** 4,
+            pb: 1000 ** 5,
+        };
+        const num = Number(str.match(/\d/).toString());
+        const type = str
+            .match(/[a-zA-Z]+/)
+            .toString()
+            .toLowerCase();
+        return num * multiplier[type];
+    };
+
     // filtering if an item is allowed in hopper
     addFilter('ALLOW_HOPPER_ITEM', (file, { query }) => {
         if (!query('GET_ALLOW_FILE_SIZE_VALIDATION')) {
@@ -45,6 +71,64 @@ const plugin = ({ addFilter, utils }) => {
                 const fileFilter = query('GET_FILE_VALIDATE_SIZE_FILTER');
                 if (fileFilter && !fileFilter(file)) {
                     return resolve(file);
+                }
+
+                // reject or resolve base on max file size by mime type
+                const mimeMaxFileSizes = query('GET_MIME_MAX_FILE_SIZES');
+                if (mimeMaxFileSizes !== null) {
+                    Object.keys(mimeMaxFileSizes).forEach(mime => {
+                        if (
+                            file.type === mime ||
+                            (mime.substring(2, -2) === '/*' &&
+                                file.type.split('/')[0] === mime.slice(0, -2))
+                        ) {
+                            if (file.size > _strToBytes(mimeMaxFileSizes[mime])) {
+                                reject({
+                                    status: {
+                                        main: query('GET_LABEL_MAX_FILE_SIZE_EXCEEDED'),
+                                        sub: replaceInString(query('GET_LABEL_MAX_FILE_SIZE'), {
+                                            filesize: toNaturalFileSize(
+                                                _strToBytes(mimeMaxFileSizes[mime]),
+                                                '.',
+                                                query('GET_FILE_SIZE_BASE'),
+                                                query('GET_FILE_SIZE_LABELS', query)
+                                            ),
+                                        }),
+                                    },
+                                });
+                                return;
+                            }
+                        }
+                    });
+                }
+
+                // reject or resolve base on min file size by mime type
+                const mimeMinFileSizes = query('GET_MIME_MIN_FILE_SIZES');
+                if (mimeMinFileSizes !== null) {
+                    Object.keys(mimeMinFileSizes).forEach(mime => {
+                        if (
+                            file.type === mime ||
+                            (mime.substring(2, -2) === '/*' &&
+                                file.type.split('/')[0] === mime.slice(0, -2))
+                        ) {
+                            if (file.size < _strToBytes(mimeMinFileSizes[mime])) {
+                                reject({
+                                    status: {
+                                        main: query('GET_LABEL_MIN_FILE_SIZE_EXCEEDED'),
+                                        sub: replaceInString(query('GET_LABEL_MIN_FILE_SIZE'), {
+                                            filesize: toNaturalFileSize(
+                                                _strToBytes(mimeMinFileSizes[mime]),
+                                                '.',
+                                                query('GET_FILE_SIZE_BASE'),
+                                                query('GET_FILE_SIZE_LABELS', query)
+                                            ),
+                                        }),
+                                    },
+                                });
+                                return;
+                            }
+                        }
+                    });
                 }
 
                 // reject or resolve based on file size
@@ -121,6 +205,12 @@ const plugin = ({ addFilter, utils }) => {
         options: {
             // Enable or disable file type validation
             allowFileSizeValidation: [true, Type.BOOLEAN],
+
+            // Max individual file size in bytes by mime type
+            mimeMaxFileSizes: [null, Type.OBJECT],
+
+            // Max individual file size in bytes by mime type
+            mimeMinFileSizes: [null, Type.OBJECT],
 
             // Max individual file size in bytes
             maxFileSize: [null, Type.INT],
